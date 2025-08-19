@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Game Backlog Portfolio</title>
+  <!-- MaterializeCSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body class="grey darken-4 white-text">
+  <nav class="grey darken-3">
+    <div class="nav-wrapper container">
+      <a href="#!" class="brand-logo">Game Backlog</a>
+      <ul class="right">
+        <li><a id="addGameBtn" class="btn add-game-btn modal-trigger waves-effect" href="#addModal">Adicionar jogo</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Controls -->
+    <div class="controls-navigation">
+      <div class="section controls-section">
+        <div class="row controls-row">
+          <div class="input-field col s12 m4 search-field">
+            <i class="material-icons prefix">search</i>
+            <input id="searchInput" type="text" placeholder="Search game title">
+          </div>
+          <div class="input-field col s6 m4 sort-field">
+            <select id="sortSelect">
+              <option value="lastAdded" selected>Sort: Last added</option>
+              <option value="lastPlayed">Sort: Last played</option>
+              <option value="rating">Sort: Rating</option>
+            </select>
+          </div>
+          <div class="input-field col s6 m4 favonly-field">
+            <label class="favonly-label">
+              <input type="checkbox" id="favOnlyToggle"/>
+              <span>Favorites</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Menus/Abas estilo barra azul -->
+    <div class="controls-navigation player-tabs-navigation">
+      <div class="section tabs-section">
+        <nav class="player-navbar">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link active" href="#profileTab">Profile</a></li>
+            <li class="nav-item"><a class="nav-link" href="#favoritesTab">Favorites</a></li>
+            <li class="nav-item"><a class="nav-link" href="#playingTab">Playing</a></li>
+            <li class="nav-item"><a class="nav-link" href="#playedTab">Played</a></li>
+            <li class="nav-item"><a class="nav-link" href="#backlogTab">Backlog</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <!-- Top Profile Shelves (depois das abas) -->
+    <div class="row top-shelves">
+      <div class="col s12 m6">
+        <h6>Currently Playing (top 3)</h6>
+        <div id="profilePlaying" class="card-grid"></div>
+      </div>
+      <div class="col s12 m6">
+        <h6>Favorite Games (top 5)</h6>
+        <div id="profileFavorites" class="card-grid"></div>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <div id="profileTab" class="section">
+      <div class="row">
+        <div class="col s12 m6">
+          <h6>Status distribution</h6>
+          <div class="chart-container"><canvas id="statusDonut"></canvas></div>
+        </div>
+        <div class="col s12 m6">
+          <h6>Ratings distribution</h6>
+          <div class="chart-container"><canvas id="ratingsBar"></canvas>
+            <div class="ratings-stars-bar">
+              <i class="material-icons">star</i>
+              <i class="material-icons">star</i>
+              <i class="material-icons">star</i>
+              <i class="material-icons">star</i>
+              <i class="material-icons">star</i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Favorites -->
+    <div id="favoritesTab" class="section">
+      <div id="favoritesList" class="card-grid"></div>
+    </div>
+
+    <!-- Playing -->
+    <div id="playingTab" class="section">
+      <div id="playingList" class="card-grid"></div>
+    </div>
+
+    <!-- Played -->
+    <div id="playedTab" class="section">
+      <div id="playedList" class="card-grid"></div>
+    </div>
+
+    <!-- Backlog -->
+    <div id="backlogTab" class="section">
+      <div id="backlogList" class="card-grid"></div>
+    </div>
+  </main>
+
+  <!-- Add/Edit Modal -->
+  <div id="addModal" class="modal black-text">
+    <div class="modal-content">
+      <h5 id="modalTitle">Add Game</h5>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="gameTitle" type="text" />
+          <label for="gameTitle" id="gameTitleLabel">Title</label>
+        </div>
+        <div class="input-field col s6">
+          <select id="gameStatus">
+            <option value="Backlog" selected>Backlog</option>
+            <option value="Currently Playing">Currently Playing</option>
+            <option value="Played">Played</option>
+          </select>
+          <label>Status</label>
+        </div>
+        <div class="input-field col s6">
+          <select id="gameRating">
+            <option value="">No rating</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+          <label>Rating (1–5)</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" id="saveBtn" class="modal-close waves-effect waves-green btn">Save</a>
+    </div>
+  </div>
+
+  <!-- Confirm Delete Modal -->
+  <div id="confirmDelete" class="modal black-text">
+    <div class="modal-content">
+      <h5>Confirm delete</h5>
+      <p>This will remove the game from your library.</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" id="confirmDeleteBtn" class="modal-close red btn">Delete</a>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast-container"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
