@@ -1,7 +1,7 @@
 # Game Backlog (Single Page App)
 
 - One-page app using **Express**, **MaterializeCSS**, **Chart.js**.
-- Data persistence: **LocalStorage** (GBR-020).
+- Data persistence: **LocaslStorage** (GBR-020).
 - Covers fetched via **IGDB** (server-side proxy).
 
 ## Requirements
