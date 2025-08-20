@@ -127,14 +127,13 @@
   <!-- MODAL: Add/Edit -->
   <dialog id="addModal" class="modal">
     <form method="dialog" class="modal-box" id="addForm" onsubmit="return false;">
+      <button type="button" class="modal-close-x" onclick="document.getElementById('addModal').close()" aria-label="Close" style="position:absolute;top:18px;right:18px;background:none;border:none;font-size:22px;color:#cfd6e6;cursor:pointer;">&times;</button>
       <h3 id="modalTitle" class="modal-title">Add Game</h3>
-
       <div class="form-grid">
         <div class="col-span-2">
           <label class="label">Title</label>
           <input id="gameTitle" class="input" placeholder="Title" required/>
         </div>
-
         <div>
           <label class="label">Status</label>
           <div class="inline-field">
@@ -143,27 +142,25 @@
                 <option value="Backlog">Backlog</option>
                 <option value="Currently Playing">Currently Playing</option>
                 <option value="Played">Played</option>
+                <option value="Favorites">Favorites</option>
               </select>
             </div>
-            <button type="button" id="favInlineBtn" class="btn-circle" title="Favorite" aria-pressed="false">
-              <i id="favInlineIcon" class="material-icons" style="font-size:20px">favorite</i>
-            </button>
           </div>
-
-          <div class="col-span-2">
-            <label class="label">Rating</label>
-            <div id="ratingStars" class="rating-select">
-              <i class="material-icons star" data-val="1">star</i>
-              <i class="material-icons star" data-val="2">star</i>
-              <i class="material-icons star" data-val="3">star</i>
-              <i class="material-icons star" data-val="4">star</i>
-              <i class="material-icons star" data-val="5">star</i>
-            </div>
+        </div>
+        <div class="col-span-2">
+          <label class="label">Rating</label>
+          <div id="ratingStars" class="rating-select">
+            <i class="material-icons star" data-val="1">star</i>
+            <i class="material-icons star" data-val="2">star</i>
+            <i class="material-icons star" data-val="3">star</i>
+            <i class="material-icons star" data-val="4">star</i>
+            <i class="material-icons star" data-val="5">star</i>
           </div>
-      <div class="actions">
-        <button id="modalDeleteBtn" type="button" class="btn btn-danger hidden">Delete</button>
+        </div>
+      </div>
+      <div class="actions" style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;">
         <button id="saveBtn" class="btn btn-primary">Save</button>
-        <button class="btn" onclick="document.getElementById('addModal').close()">Close</button>
+        <button id="modalDeleteBtn" type="button" class="btn btn-danger hidden" style="min-width:90px;">Delete</button>
       </div>
     </form>
   </dialog>

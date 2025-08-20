@@ -1,6 +1,6 @@
 // ===== Constants =====
 const STORAGE_KEY = 'gbr.games.v1';
-const STATUSES = ['Backlog', 'Currently Playing', 'Played'];
+const STATUSES = ['Backlog', 'Currently Playing', 'Played', 'Favorites'];
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
@@ -11,7 +11,6 @@ let state = {
 };
 
 // ===== Modal temp state =====
-let modalFavorite = false;
 let modalRating = null;
 
 // ===== Storage =====
@@ -75,15 +74,7 @@ function starIcons(rating) {
 const sanitizeTitle = (t) => t.trim();
 const findById = (id) => state.games.find((g) => g.id === id);
 
-// ===== Modal helpers (inline favorite + star picker) =====
-function setFavInline(v) {
-  modalFavorite = !!v;
-  const btn = $('#favInlineBtn');
-  if (!btn) return;
-  btn.setAttribute('aria-pressed', modalFavorite ? 'true' : 'false');
-  const icon = $('#favInlineIcon');
-  if (icon) icon.style.color = modalFavorite ? '#ef5b83' : '';
-}
+// ===== Modal helpers (star picker) =====
 function bindRatingStars(initial) {
   const stars = $$('#ratingStars .star');
   function paint(v) {
@@ -98,7 +89,7 @@ function bindRatingStars(initial) {
 }
 
 // ===== CRUD =====
-async function addGame(title, status = 'Backlog', rating = null, favorite = false) {
+async function addGame(title, status = 'Backlog', rating = null) {
   const t = sanitizeTitle(title);
   if (!t) return toast('Title is required');
   if (state.games.some((g) => g.title.toLowerCase() === t.toLowerCase()))
@@ -111,7 +102,6 @@ async function addGame(title, status = 'Backlog', rating = null, favorite = fals
     title: t,
     status,
     rating: rating ?? null,
-    favorite: !!favorite,
     imageUrl: cover || '/img/placeholder.svg',
     createdAt: nowIso(),
     updatedAt: nowIso(),
@@ -146,7 +136,6 @@ function applyQueryAndSort(items, statusFilter = null) {
   let arr = items.slice();
 
   if (statusFilter) arr = arr.filter((g) => g.status === statusFilter);
-  if (state.ui.sort === 'favorites') arr = arr.filter((g) => g.favorite);
 
   const q = state.ui.search.trim().toLowerCase();
   if (q) arr = arr.filter((g) => g.title.toLowerCase().includes(q));
@@ -180,9 +169,6 @@ function gameCard(g) {
       <img src="${g.imageUrl}" alt="${g.title} cover" onerror="this.src='/img/placeholder.svg'">
       <div class="cover-overlay">
         <div class="overlay-actions">
-          <button class="btn-circle fav-toggle" data-id="${g.id}" title="Favorite" aria-pressed="${g.favorite?'true':'false'}">
-            <i class="material-icons" style="font-size:18px;${g.favorite ? 'color:#ef5b83' : ''}">favorite</i>
-          </button>
           <button class="btn-circle edit-link" data-id="${g.id}" title="Edit">
             <i class="material-icons" style="font-size:18px">edit</i>
           </button>
@@ -206,10 +192,11 @@ function renderCharts() {
   const counts = {
     Played: state.games.filter((g) => g.status === 'Played').length,
     'Currently Playing': state.games.filter((g) => g.status === 'Currently Playing').length,
-    Backlog: state.games.filter((g) => g.status === 'Backlog').length
+    Backlog: state.games.filter((g) => g.status === 'Backlog').length,
+    Favorites: state.games.filter((g) => g.status === 'Favorites').length
   };
-  const series = [counts.Played, counts['Currently Playing'], counts.Backlog];
-  const labels = ['Played', 'Currently Playing', 'Backlog'];
+  const series = [counts.Played, counts['Currently Playing'], counts.Backlog, counts.Favorites];
+  const labels = ['Played', 'Currently Playing', 'Backlog', 'Favorites'];
   const total = series.reduce((a, b) => a + b, 0);
 
   if (statusChart) statusChart.destroy();
@@ -217,8 +204,7 @@ function renderCharts() {
     chart: { type: 'donut', height: 250, background: 'transparent', toolbar: { show: false } },
     series,
     labels,
-    // Played -> red; Currently Playing -> blue; Backlog -> gray
-    colors: ['#de3d3d', '#1976d2', '#616161'],
+    colors: ['#de3d3d', '#1976d2', '#616161', '#ef5b83'],
     legend: {
       show: true,
       position: 'right',
@@ -247,11 +233,12 @@ function renderCharts() {
   statusChart.render();
 
   const dist = [1, 2, 3, 4, 5].map((r) => state.games.filter((g) => g.rating === r).length);
+  const totalRatings = state.games.filter((g) => Number.isInteger(g.rating)).length;
 
   if (ratingsChart) ratingsChart.destroy();
   ratingsChart = new ApexCharts($('#ratingsBar'), {
-    chart: { type: 'bar', height: 240, background: 'transparent', toolbar: { show: false } },
-    series: [{ name: 'Games', data: dist }],
+    chart: { type: 'bar', height: 240, toolbar: { show: false } },
+    series: [{ data: dist }],
     xaxis: {
       categories: ['1', '2', '3', '4', '5'],
       axisBorder: { show: false },
@@ -260,14 +247,28 @@ function renderCharts() {
     },
     yaxis: { show: false },
     grid: { show: false },
-    plotOptions: { bar: { borderRadius: 8, columnWidth: '50%', distributed: true } },
+    plotOptions: { bar: { borderRadius: 8, columnWidth: '50%', distributed: true, states: { hover: { filter: { type: 'none' } } } } },
     colors: ['#f5a623', '#f5a623', '#f5a623', '#f5a623', '#f5a623'],
     dataLabels: {
       enabled: true,
       formatter: (val) => (val > 0 ? String(val) : ''),
       style: { colors: ['#ffffff'], fontSize: '12px', fontWeight: '700' }
     },
-    tooltip: { theme: 'dark', x: { show: false }, y: { formatter: (val) => `Games: ${val}` } },
+    tooltip: {
+      theme: 'dark',
+      x: { show: false },
+      y: {
+        title: {
+          formatter: () => ''
+        },
+        formatter: (val, opts) => {
+          if (!totalRatings) return '0%';
+          const percent = Math.round((val / totalRatings) * 100);
+          const star = opts.dataPointIndex + 1;
+          return `${percent}% with ${star} star${star > 1 ? 's' : ''}`;
+        }
+      }
+    },
     legend: { show: false }
   });
   ratingsChart.render();
@@ -277,7 +278,7 @@ function renderProfileShelves() {
   const playing = state.games
     .filter((g) => g.status === 'Currently Playing')
     .slice(0, 3);
-  const favs = state.games.filter((g) => g.favorite).slice(0, 5);
+  const favs = state.games.filter((g) => g.status === 'Favorites').slice(0, 5);
   $('#profilePlaying').innerHTML =
     playing.map(gameCard).join('') || '<p class="text-neutral">No items</p>';
   $('#profileFavorites').innerHTML =
@@ -285,7 +286,7 @@ function renderProfileShelves() {
 }
 
 function updateSectionCounts() {
-  const favorites = state.games.filter((g) => g.favorite).length;
+  const favorites = state.games.filter((g) => g.status === 'Favorites').length;
   const playing = state.games.filter((g) => g.status === 'Currently Playing').length;
   const played = state.games.filter((g) => g.status === 'Played').length;
   const backlog = state.games.filter((g) => g.status === 'Backlog').length;
@@ -303,11 +304,7 @@ function renderAll() {
   renderCharts();
   renderProfileShelves();
 
-  const favoritesOnly = state.games.filter((g) => g.favorite);
-  $('#favoritesList').innerHTML =
-    applyQueryAndSort(favoritesOnly).map(gameCard).join('') ||
-    '<p class="text-neutral">No items</p>';
-
+  renderList('favoritesList', 'Favorites');
   renderList('playingList', 'Currently Playing');
   renderList('playedList', 'Played');
   renderList('backlogList', 'Backlog');
@@ -328,18 +325,6 @@ function renderAll() {
 
 // ===== Events for dynamic elements =====
 function bindDynamicActions() {
-  // Toggle favorite on card
-  $$('.fav-toggle').forEach((btn) => {
-    btn.onclick = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const id = e.currentTarget.dataset.id;
-      const g = findById(id);
-      if (!g) return;
-      updateGame(id, { favorite: !g.favorite });
-    };
-  });
-
   // Open edit modal
   $$('.edit-link').forEach((btn) => {
     btn.onclick = (e) => {
@@ -355,8 +340,6 @@ function bindDynamicActions() {
       $('#gameTitle').disabled = true;
       $('#gameStatus').value = g.status;
 
-      // prepare inline favorite + rating stars
-      setFavInline(!!g.favorite);
       bindRatingStars(g.rating ?? 0);
 
       $('#modalDeleteBtn').classList.remove('hidden');
@@ -424,32 +407,25 @@ document.addEventListener('DOMContentLoaded', () => {
     $('#gameTitle').disabled = false;
     $('#gameStatus').value = 'Backlog';
 
-    // reset inline favorite + rating
-    setFavInline(false);
     bindRatingStars(null);
 
     $('#modalDeleteBtn').classList.add('hidden');
     openModal('addModal');
   };
 
-  // inline favorite toggle in modal
-  $('#favInlineBtn').onclick = () => setFavInline(!modalFavorite);
-
   // save (add or edit)
   $('#saveBtn').onclick = async () => {
     const title = $('#gameTitle').value.trim();
     const status = $('#gameStatus').value;
-
-    const favorite = modalFavorite;
     const rating = modalRating;
 
     if (!isValidRating(rating)) return toast('Invalid rating');
 
     if (state.ui.editId) {
-      updateGame(state.ui.editId, { status, rating, favorite });
+      updateGame(state.ui.editId, { status, rating });
       state.ui.editId = null;
     } else {
-      await addGame(title, status, rating, favorite);
+      await addGame(title, status, rating);
     }
     $('#addModal').close();
   };
