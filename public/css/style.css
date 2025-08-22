@@ -189,8 +189,36 @@ select.input{
   opacity:0; transition:opacity .18s ease;
   z-index: 1;
 }
+
+/* Título do jogo no overlay */
+.cover-overlay .game-title{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.5);
+  line-height: 1.2;
+  text-align: center;
+  padding: 8px 0;
+  /* Posiciona o título acima das estrelas */
+  order: 2;
+  margin-bottom: 8px;
+  /* Força o título para baixo */
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+}
 .card:hover .cover-overlay{ opacity:1 }
-.overlay-actions{ display:flex; gap:8px; justify-content:flex-end; }
+.overlay-actions{ 
+  display:flex; 
+  gap:8px; 
+  justify-content:flex-end; 
+  /* Posiciona as ações no topo */
+  order: 1;
+  margin-bottom: auto;
+}
 .btn-circle{
   width:34px; height:34px; border-radius:999px; display:flex; align-items:center; justify-content:center;
   border:1px solid #2b3344; background:#0f1520; color:#fff;
@@ -199,6 +227,9 @@ select.input{
   display:flex; gap:2px; justify-content:center;
   position:relative; z-index:2;
   text-shadow:0 1px 2px rgba(0,0,0,.7), 0 0 6px rgba(0,0,0,.35);
+  /* Posiciona as estrelas na parte de baixo */
+  order: 3;
+  margin-top: auto;
 }
 
 /* Subtle hover for circular overlay buttons */
