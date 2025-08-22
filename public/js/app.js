@@ -1,6 +1,6 @@
 // ===== Constants =====
 const STORAGE_KEY = 'gbr.games.v1';
-const STATUSES = ['Backlog', 'Currently Playing', 'Played', 'Favorites'];
+const STATUSES = ['Backlog', 'Playing', 'Played', 'Favorites'];
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
@@ -168,6 +168,7 @@ function gameCard(g) {
     <figure>
       <img src="${g.imageUrl}" alt="${g.title} cover" onerror="this.src='/img/placeholder.svg'">
       <div class="cover-overlay">
+        <h3 class="game-title">${g.title}</h3>
         <div class="overlay-actions">
           <button class="btn-circle edit-link" data-id="${g.id}" title="Edit">
             <i class="material-icons" style="font-size:18px">edit</i>
@@ -191,12 +192,12 @@ let statusChart, ratingsChart;
 function renderCharts() {
   const counts = {
     Played: state.games.filter((g) => g.status === 'Played').length,
-    'Currently Playing': state.games.filter((g) => g.status === 'Currently Playing').length,
+    Playing: state.games.filter((g) => g.status === 'Playing').length,
     Backlog: state.games.filter((g) => g.status === 'Backlog').length,
     Favorites: state.games.filter((g) => g.status === 'Favorites').length
   };
-  const series = [counts.Played, counts['Currently Playing'], counts.Backlog, counts.Favorites];
-  const labels = ['Played', 'Currently Playing', 'Backlog', 'Favorites'];
+  const series = [counts.Played, counts['Playing'], counts.Backlog, counts.Favorites];
+  const labels = ['Played', 'Playing', 'Backlog', 'Favorites'];
   const total = series.reduce((a, b) => a + b, 0);
 
   if (statusChart) statusChart.destroy();
@@ -281,7 +282,7 @@ function renderCharts() {
 
 function renderProfileShelves() {
   const playing = state.games
-    .filter((g) => g.status === 'Currently Playing')
+    .filter((g) => g.status === 'Playing')
     .slice(0, 3);
   const favs = state.games.filter((g) => g.status === 'Favorites').slice(0, 5);
   $('#profilePlaying').innerHTML =
@@ -292,7 +293,7 @@ function renderProfileShelves() {
 
 function updateSectionCounts() {
   const favorites = state.games.filter((g) => g.status === 'Favorites').length;
-  const playing = state.games.filter((g) => g.status === 'Currently Playing').length;
+  const playing = state.games.filter((g) => g.status === 'Playing').length;
   const played = state.games.filter((g) => g.status === 'Played').length;
   const backlog = state.games.filter((g) => g.status === 'Backlog').length;
   const set = (id, v) => {
@@ -310,7 +311,7 @@ function renderAll() {
   renderProfileShelves();
 
   renderList('favoritesList', 'Favorites');
-  renderList('playingList', 'Currently Playing');
+  renderList('playingList', 'Playing');
   renderList('playedList', 'Played');
   renderList('backlogList', 'Backlog');
 
