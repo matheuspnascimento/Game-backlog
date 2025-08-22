@@ -183,7 +183,7 @@ function renderList(containerId, statusFilter = null) {
   const el = document.getElementById(containerId);
   const items = applyQueryAndSort(state.games, statusFilter);
   el.innerHTML =
-    items.map(gameCard).join('') || '<p class="text-neutral">No items</p>';
+    items.map(gameCard).join('') || '<p class="text-neutral">Insert new games!</p>';
 }
 
 let statusChart, ratingsChart;
@@ -240,10 +240,15 @@ function renderCharts() {
     chart: { type: 'bar', height: 240, toolbar: { show: false } },
     series: [{ data: dist }],
     xaxis: {
-      categories: ['1', '2', '3', '4', '5'],
+      categories: ['1 ⭐', '2 ⭐', '3 ⭐', '4 ⭐', '5 ⭐'],
       axisBorder: { show: false },
       axisTicks: { show: false },
-      labels: { style: { colors: '#cfd6e6', fontSize: '12px' } }
+      labels: { 
+        style: { colors: '#cfd6e6', fontSize: '12px' },
+        formatter: function(value) {
+          return value;
+        }
+      }
     },
     yaxis: { show: false },
     grid: { show: false },
@@ -280,9 +285,9 @@ function renderProfileShelves() {
     .slice(0, 3);
   const favs = state.games.filter((g) => g.status === 'Favorites').slice(0, 5);
   $('#profilePlaying').innerHTML =
-    playing.map(gameCard).join('') || '<p class="text-neutral">No items</p>';
+    playing.map(gameCard).join('') || '<p class="text-neutral">You have no games in progress at the moment</p>';
   $('#profileFavorites').innerHTML =
-    favs.map(gameCard).join('') || '<p class="text-neutral">No items</p>';
+    favs.map(gameCard).join('') || '<p class="text-neutral">You have no favorite games at the moment</p>';
 }
 
 function updateSectionCounts() {
