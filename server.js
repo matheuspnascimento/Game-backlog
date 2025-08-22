@@ -32,6 +32,7 @@ async function getTwitchToken() {
     throw new Error(`Twitch token error: ${res.status} ${msg}`);
   }
   const j = await res.json();
+  console.log(j)
   cachedToken = j.access_token;
   tokenExpTs = now + (j.expires_in - 60) * 1000;
   return cachedToken;

@@ -1,8 +1,8 @@
 /* ===== Base ===== */
 :root{
   --bg:#0f141a;
-  --ink:#1976d2;              /* Azul base (tabs/títulos) */
-  --ink-2:#2196f3;            /* Azul claro */
+  --ink:#1976d2;
+  --ink-2:#2196f3;
   --ink-grad: linear-gradient(180deg,#2196f3 0%,#1976d2 100%);
   --surface:#151b22;
   --card:#11171d;
@@ -38,11 +38,23 @@ html,body{
   border-radius:10px; cursor:pointer; transition:all .2s ease;
 }
 .btn:hover{ filter:brightness(1.05) }
-.btn-primary{ background:var(--primary); border-color:var(--primary) }
+.btn-primary{ 
+  background:var(--primary); 
+  border-color:var(--primary);
+  transition:all .2s ease;
+  font-weight:600;
+  font-size:15px;
+}
+.btn-primary:hover{
+  background:#1565c0;
+  border-color:#1565c0;
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(25,118,210,0.3);
+}
 .btn-danger{ background:var(--danger); border-color:var(--danger) }
 .btn-pill{ border-radius:999px }
 .input{
-  width:100%; padding:12px 14px; border-radius:10px; border:1px solid #2b3344;
+  width:100%; padding:14px 16px; border-radius:10px; border:1px solid #2b3344;
   background:#141922; color:#ffffff; outline:none;
 }
 .label{ display:block; color:#ffffff; font-size:13px; margin-bottom:6px }
@@ -52,6 +64,10 @@ select.input{
   appearance:none; -webkit-appearance:none; -moz-appearance:none;
   background:#141922 linear-gradient(180deg,rgba(255,255,255,.05),rgba(0,0,0,.05));
   padding-right:40px;
+  min-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .select-wrap{ position:relative }
 .select-wrap::after{
@@ -69,7 +85,6 @@ select.input{
 .rating-select .star{ cursor:pointer; font-size:22px; color:#4f5663; transition: color .12s ease, transform .1s ease; }
 .rating-select .star.active{ color:#ffbf4d; }
 .rating-select .star:hover{ transform: scale(1.05); }
-
 
 /* Switch (Favorite) */
 .switch{ position:relative; width:46px; height:26px; display:inline-block }
@@ -114,20 +129,29 @@ select.input{
 .menu li:hover{ background:#1b2230 }
 
 /* ===== Tabs ===== */
-.tabs{ display:grid; grid-template-columns: repeat(5, 1fr); margin-top:14px; gap:0; }
+.tabs{ display:flex; margin-top:14px; gap:0; }
 .tab{
-  background:rgba(255,255,255,.08); color:#eaf0ff; padding:12px 16px; border:1px solid rgba(255,255,255,.12);
-  cursor:pointer; transition:all .15s ease; font-weight:700; text-align:center;
+  background:transparent; color:#eaf0ff; padding:16px 20px; border:none;
+  cursor:pointer; transition:all .2s ease; font-weight:600; text-align:center; flex:1;
+  font-size:16px; position:relative;
 }
-.tab:hover{ filter:brightness(1.05) }
-.tab-active{ background:#111722; border-color:#2b3344; }
-.tabs .tab:first-child{ border-top-left-radius:10px; border-bottom-left-radius:10px }
-.tabs .tab:last-child{ border-top-right-radius:10px; border-bottom-right-radius:10px }
+/* .tab:hover{ 
+  background:rgba(255,255,255,.05); 
+  transform:translateY(-2px);
+} */
+.tab-active{ 
+  background:#0f1520; 
+  color:#2196f3;
+  font-weight:700;
+  border:1px solid #1976d2;
+}
+.tabs .tab:first-child{ border-top-left-radius:12px; border-bottom-left-radius:12px; }
+.tabs .tab:last-child{ border-top-right-radius:12px; border-bottom-right-radius:12px; }
 
 /* ===== Titles + counters ===== */
 .section-title{
   font-weight:800; margin:16px 0 10px; display:flex; align-items:center; gap:8px;
-  color:var(--ink-2); /* igual às abas */
+  color:var(--ink-2);
 }
 .count-badge{
   background:#0c2e55; border:1px solid #17457a; color:#a6d1ff;
@@ -148,12 +172,22 @@ select.input{
 .card figure{ position:relative; margin:0 }
 .card img{ width:100%; aspect-ratio:2/3; object-fit:cover; display:block }
 
+.card figure::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0;
+  height:34%;
+  background:linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.32) 55%, rgba(0,0,0,0) 100%);
+  pointer-events:none;
+  z-index:0;
+}
+
 /* Overlay ao passar o mouse */
 .cover-overlay{
   position:absolute; inset:0; padding:10px;
   display:flex; flex-direction:column; justify-content:space-between;
   background:linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,.6) 100%);
   opacity:0; transition:opacity .18s ease;
+  z-index: 1;
 }
 .card:hover .cover-overlay{ opacity:1 }
 .overlay-actions{ display:flex; gap:8px; justify-content:flex-end; }
@@ -161,14 +195,17 @@ select.input{
   width:34px; height:34px; border-radius:999px; display:flex; align-items:center; justify-content:center;
   border:1px solid #2b3344; background:#0f1520; color:#fff;
 }
-.overlay-stars{ display:flex; gap:2px; justify-content:center; }
+.overlay-stars{
+  display:flex; gap:2px; justify-content:center;
+  position:relative; z-index:2;
+  text-shadow:0 1px 2px rgba(0,0,0,.7), 0 0 6px rgba(0,0,0,.35);
+}
 
 /* Subtle hover for circular overlay buttons */
 .btn-circle{ transition: opacity .15s ease, transform .12s ease; }
 .btn-circle:hover{ opacity:.92; transform: translateY(-1px); }
 /* Favorite ativo (inclusive no modal) */
 .btn-circle[aria-pressed="true"] i{ color:#ef5b83; }
-
 
 /* ===== Layout (alinhamento prateleiras x gráficos) ===== */
 .pair{ display:grid; grid-template-columns: 1fr 420px; gap:24px; align-items:start; }
@@ -182,12 +219,12 @@ select.input{
 .modal{ border:0; padding:0; background:transparent }
 .modal::backdrop{ background:rgba(0,0,0,.6) }
 .modal-box{
-  max-width:980px; width:calc(100% - 24px); margin:auto; background:#0f1520; border:1px solid #223049; border-radius:14px;
-  padding:22px; box-shadow:var(--shadow); color:var(--text);
+  max-width:1200px; width:calc(100% - 24px); margin:auto; background:#0f1520; border:1px solid #223049; border-radius:14px;
+  padding:28px; box-shadow:var(--shadow); color:var(--text);
 }
 .modal-title{ margin:0 0 14px; font-weight:800 }
-.actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:18px }
-.form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px }
+.actions{ display:flex; gap:10px; justify-content:space-between; margin-top:18px; align-items:center; }
+.form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px }
 .col-span-2{ grid-column:1 / -1 }
 
 /* ===== Toast ===== */
@@ -211,6 +248,21 @@ select.input{
 .apexcharts-bar-series .apexcharts-bar-hover {
   opacity: 0 !important;
   fill: none !important;
+}
+
+/* Linha separadora para o gráfico de ratings */
+#ratingsBar {
+  position: relative;
+}
+
+#ratingsBar::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #2b3344, transparent);
 }
 .apexcharts-bar-series .apexcharts-series path:hover,
 .apexcharts-bar-series .apexcharts-series .apexcharts-bar-area:hover {
@@ -238,4 +290,20 @@ select.input{
 #confirmDelete .btn {
   min-width: 90px;
   white-space: nowrap;
+}
+
+/* Ajuste do botão Delete no modal de edição */
+#modalDeleteBtn {
+  min-width: 80px;
+  padding: 8px 16px;
+  font-size: 14px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  order: 1;
+}
+
+#saveBtn {
+  order: 2;
 }
