@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "node server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "cypress:run": "cypress run",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
