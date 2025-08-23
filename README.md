@@ -28,7 +28,7 @@ All **bugs** are tracked in **GitHub Issues**. Project in *current development*.
 ---
 
 ## Project Structure
-´´´´´´´´
+```bash
 GAME-BACKLOG/
 ├── .github/
 │   └── workflows/
@@ -38,9 +38,11 @@ GAME-BACKLOG/
 │   │   └── backlog.cy.js
 │   ├── fixtures/
 │   └── support/
+├── node_modules/
 ├── public/
 │   ├── css/
 │   │   └── style.css
+│   ├── img/
 │   ├── js/
 │   │   └── app.js
 │   └── index.html
@@ -50,9 +52,10 @@ GAME-BACKLOG/
 ├── cypress.config.js
 ├── package-lock.json
 ├── package.json
-├── server.js
-└── README.md
-´´´´´´´´
+├── README.md
+└── server.js
+```
+
 
 > The server serves `public/`. If your files are at the repo root, move them under `public/` or update `server.js`.
 
