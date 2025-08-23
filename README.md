@@ -29,23 +29,30 @@ All **bugs** are tracked in **GitHub Issues**. Project in *current development*.
 
 ## Project Structure
 
-```
-.
-├─ public/
-│  ├─ index.html
-│  ├─ css/
-│  │  └─ style.css
-│  └─ js/
-│     └─ app.js
-├─ server.js
-├─ package.json
-├─ package-lock.json
-├─ cypress/
-│  └─ e2e/
-│     └─ backlog.cy.js
-├─ .env              # not committed
-└─ .gitignore
-```
+GAME-BACKLOG/
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+├── cypress/
+│   ├── e2e/
+│   │   └── backlog.cy.js
+│   ├── fixtures/
+│   └── support/
+├── public/
+│   ├── css/
+│   │   └── style.css
+│   ├── js/
+│   │   └── app.js
+│   └── index.html
+├── .env
+├── .env.example
+├── .gitignore
+├── cypress.config.js
+├── package-lock.json
+├── package.json
+├── server.js
+└── README.md
+
 
 > The server serves `public/`. If your files are at the repo root, move them under `public/` or update `server.js`.
 
