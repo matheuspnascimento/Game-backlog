@@ -28,7 +28,7 @@ All **bugs** are tracked in **GitHub Issues**. Project in *current development*.
 ---
 
 ## Project Structure
-
+´´´´´´´´
 GAME-BACKLOG/
 ├── .github/
 │   └── workflows/
@@ -52,7 +52,7 @@ GAME-BACKLOG/
 ├── package.json
 ├── server.js
 └── README.md
-
+´´´´´´´´
 
 > The server serves `public/`. If your files are at the repo root, move them under `public/` or update `server.js`.
 
