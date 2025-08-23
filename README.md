@@ -29,7 +29,6 @@ All **bugs** are tracked in **GitHub Issues**. Project in *current development*.
 
 ## Project Structure
 ```bash
-GAME-BACKLOG/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml
