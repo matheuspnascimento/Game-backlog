@@ -2,7 +2,7 @@
 
 Personal QA portfolio project to demonstrate my work as a QA Engineer.
 All **requirements**, **test plan**, and **test cases** are in the **GitHub Wiki**.
-All **bugs** are tracked in **GitHub Issues**. Project currently under development*.
+All **bugs** are tracked in **GitHub Issues**. *Project currently under development*.
 
 ---
 
